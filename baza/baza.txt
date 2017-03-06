@@ -1,6 +1,6 @@
 user (id, username, password(hash), salt, name, fk_id_user_role, active)
 role (id_user_role, type,0-gost, 1-reg,2-admin, description, active)
 menu_item(id,title, is_shown, active) //početna, novosti, blog, ...
-article(id, fk_id_article_category,fk_id_menu_item, title, content, is_shown, active)
+article(id, fk_id_article_category,fk_id_menu_item, title, content, is_shown, status(ceka na aktivaciju, blokiran...), active)
 article_category(id_article_category, title, is_shown,active)
 language(id, lang, is_shown, active)
