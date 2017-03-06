@@ -1,0 +1,14 @@
+FRONTEND:
+--------
+
+BACKEND:
+--------
+Login (password hash, username u sesiju)
+Logout
+Dodavanje korisnika (samo admin može odobriti korisnike)
+Dodavanje meni stavki (novosti, blog)
+Dodavanje i brisanje kategorija članaka (sport, vijesti, ...)
+... članaka (mora biti u nekoj kategoriji)
+... jezika (dodati i ikonicu)
+
+
