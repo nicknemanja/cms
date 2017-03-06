@@ -5,6 +5,7 @@
     </head>
     <body>
         <?php
+            echo "CMS index page!";
         ?>
     </body>
 </html>
