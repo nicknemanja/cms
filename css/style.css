@@ -1,0 +1,12 @@
+body{
+    background-color: #fcfae8 !important;
+}
+
+.errorMessageDiv{
+    background-color: #FFCCCC;
+    margin: 2%;
+}
+
+#mainMenu{
+    margin-top: 2%;
+}

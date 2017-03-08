@@ -5,5 +5,15 @@
         <data xmlns="http://www.netbeans.org/ns/php-project/1">
             <name>cms_j</name>
         </data>
+        <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
+            <word>Artikli</word>
+            <word>Blog</word>
+            <word>CSS</word>
+            <word>JavaScript</word>
+            <word>Novosti</word>
+            <word>Pocetna</word>
+            <word>Prijava</word>
+            <word>Registracija</word>
+        </spellchecker-wordlist>
     </configuration>
 </project>

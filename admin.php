@@ -1,15 +1,18 @@
 <?php
 
-session_start();
-
-if (!checkUserPermission()) {
-    echo "<h3>Zabranjen pristup " . __FILE__ . ".php</h3>";
-} else {
-    echo "<h3>Dozvoljen pristup " . __FILE__ . ".php</h3>";
-}
+//require
+require 'config-cms-j.php';
+require TEMPLATE_PATH . '/include/header.php';
 
 $action = isset($_GET['action']) ? htmlspecialchars($_GET['action']) : "";
-var_dump('action', $action);
+
+
+if (!isAccessAllowed($action)) {
+    echo "<h3>Zabranjen pristup admin.php</h3>";
+    $_SESSION[FORBIDEN_ACCESS] = FORBIDEN_ACCESS . 'admin.php.';
+    header('Location: index.php');
+}
+
 
 switch ($action) {
     case '':
@@ -43,8 +46,11 @@ switch ($action) {
         homepage();
 }
 
-function checkUserPermission() {
-    echo 'Poziv funkcije checkUserPermission().';
+function isAccessAllowed($action) {
+    if ($action === 'login' || $action === 'logout') {
+        return true;
+    }
+
     if (isset($_SESSION['username'])) {
         return $_SESSION['username'] === 'admin';
     } else {
@@ -57,7 +63,7 @@ function homepage() {
 }
 
 function login() {
-    echo 'Poziv funkcije login().';
+    echo 'Poziv funkcije login() | admin.php.';
 }
 
 function logout() {
@@ -87,3 +93,9 @@ function editUser() {
 function deleteUser() {
     echo 'Poziv funkcije deleteUser().';
 }
+
+function newLine() {
+    echo "<br>";
+}
+
+require TEMPLATE_PATH . '/include/footer.php';

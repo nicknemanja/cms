@@ -1,11 +1,16 @@
 <?php
 
+//require
+require 'config-cms-j.php';
+require TEMPLATE_PATH . '/include/header.php';
+
+showNotificationMessages();
+
 $action = isset($_GET['action']) ? htmlspecialchars($_GET['action']) : "";
-var_dump('action', $action);
 
 switch ($action) {
     case '':
-        index();
+        homepage();
         break;
     case 'login':
         login();
@@ -14,17 +19,31 @@ switch ($action) {
         logout();
         break;
     default :
-        index();
+        homepage();
 }
 
-function index() {
-    echo 'Poziv funkcije index().';
+require TEMPLATE_PATH . '/include/footer.php';
+
+
+function homepage() {
+    
 }
 
 function login() {
-    echo 'Poziv funkcije login().';
+    header("Location: admin.php?action=login");
 }
 
 function logout() {
-    echo 'Poziv funkcije logout().';
+    
+}
+
+function showNotificationMessages() {
+    if (isset($_SESSION[FORBIDEN_ACCESS])) {
+        echo '<div class="errorMessageDiv">' . $_SESSION[FORBIDEN_ACCESS] . '</div>';
+    }
+    unset($_SESSION[FORBIDEN_ACCESS]);
+}
+
+function newLine() {
+    echo "<br>";
 }
