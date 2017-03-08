@@ -1,6 +1,6 @@
 <?php
 
-$action = (null !== (htmlspecialchars($_GET['action']))) ? htmlspecialchars($_GET['action']) : "";
+$action = isset($_GET['action']) ? htmlspecialchars($_GET['action']) : "";
 var_dump('action', $action);
 
 switch ($action) {

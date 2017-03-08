@@ -1,12 +1,8 @@
 <?php
 
-class UserDAO {
+class MenuItemDAO {
 
     //parameters
-    //constructor
-    public function __construct($array = []) {
-        
-    }
 
     //methods
     public static function getById($id) {
