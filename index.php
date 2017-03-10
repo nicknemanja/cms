@@ -3,6 +3,7 @@
 //require
 require 'config-cms-j.php';
 require 'src/dao/UserDAO.php';
+require 'src/dao/ArticleDAO.php';
 
 require 'src/db/DB_Connection.php';
 require TEMPLATE_PATH . '/include/header.php';
@@ -27,6 +28,9 @@ switch ($action) {
     case 'articles':
         showArticles();
         break;
+    case 'viewArticle':
+        viewArticle();
+        break;
     default :
         homepage();
 }
@@ -34,12 +38,11 @@ switch ($action) {
 require TEMPLATE_PATH . '/include/footer.php';
 
 function homepage() {
-    
+    require 'articles.php';
 }
 
 function login() {
-    header("Location: admin.php?action=login");
-}
+    echo 'Implementirati login!';}
 
 function logout() {
     
@@ -47,16 +50,21 @@ function logout() {
 
 function registerUser() {
     if (!(isset($_SESSION['registrationFromForm']))) {
-        require TEMPLATE_PATH . '/register.php';
+        require 'register.php';
     } else {
         unset($_SESSION['registrationFromForm']);
-        var_dump("Parametri za registraciju", $_POST);
+        var_dump("Parametri za registraciju! Ukloniti die()!", $_POST);
         die();
     }
 }
 
 function showArticles() {
-    require TEMPLATE_PATH . '/articles.php';
+    require 'articles.php';
+}
+
+function viewArticle() {
+    echo '<h1>View Article Page!<h1>';
+    //require TEMPLATE_PATH . '/viewArticle='.$_GET['id'];
 }
 
 function showNotificationMessages() {

@@ -1,8 +1,11 @@
 <?php
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 //require
 require 'config-cms-j.php';
-require TEMPLATE_PATH . '/include/header.php';
+require 'templates/include/header.php';
 
 $action = isset($_GET['action']) ? htmlspecialchars($_GET['action']) : "";
 
@@ -73,7 +76,7 @@ function logout() {
     echo 'Poziv funkcije logout().';
 }
 
-function registerUser(){
+function registerUser() {
     
 }
 

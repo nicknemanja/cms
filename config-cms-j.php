@@ -2,8 +2,8 @@
 
 //db
 define("DB_DSN",'mysql:host=localhost;dbname=cms_j');
-define("DB_USERNAME", 'test');
-define('DB_PASSWORD', 'test');
+define("DB_USERNAME", 'root');
+define('DB_PASSWORD', 'Nemanja1!!@');
 
 //path
 define("TEMPLATE_PATH", "templates");

@@ -10,10 +10,13 @@
             <word>Blog</word>
             <word>CSS</word>
             <word>JavaScript</word>
+            <word>Naslov</word>
             <word>Novosti</word>
             <word>Pocetna</word>
             <word>Prijava</word>
+            <word>RB</word>
             <word>Registracija</word>
+            <word>Sadrzaj</word>
         </spellchecker-wordlist>
     </configuration>
 </project>

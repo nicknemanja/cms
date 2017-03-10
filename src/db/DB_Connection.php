@@ -3,8 +3,8 @@
 class DB_Connection {
 
     public static $DB_DSN = 'mysql:host=localhost;dbname=cms_j';
-    public static $DB_USERNAME = 'test';
-    public static $DB_PASSWORD = 'test';
+    public static $DB_USERNAME = 'root';
+    public static $DB_PASSWORD = 'Nemanja1!!@';
     public static $PDO_CONNECTION = null;
 
     public static function getPdo() {
