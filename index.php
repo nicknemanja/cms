@@ -2,6 +2,9 @@
 
 //require
 require 'config-cms-j.php';
+require 'src/dao/UserDAO.php';
+
+require 'src/db/DB_Connection.php';
 require TEMPLATE_PATH . '/include/header.php';
 
 showNotificationMessages();
@@ -18,12 +21,17 @@ switch ($action) {
     case 'logout':
         logout();
         break;
+    case 'register':
+        registerUser();
+        break;
+    case 'articles':
+        showArticles();
+        break;
     default :
         homepage();
 }
 
 require TEMPLATE_PATH . '/include/footer.php';
-
 
 function homepage() {
     
@@ -35,6 +43,20 @@ function login() {
 
 function logout() {
     
+}
+
+function registerUser() {
+    if (!(isset($_SESSION['registrationFromForm']))) {
+        require TEMPLATE_PATH . '/register.php';
+    } else {
+        unset($_SESSION['registrationFromForm']);
+        var_dump("Parametri za registraciju", $_POST);
+        die();
+    }
+}
+
+function showArticles() {
+    require TEMPLATE_PATH . '/articles.php';
 }
 
 function showNotificationMessages() {

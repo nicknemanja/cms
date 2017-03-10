@@ -24,6 +24,9 @@ switch ($action) {
     case 'logout':
         logout();
         break;
+    case 'register':
+        registerUser();
+        break;
     case 'newArticle':
         newArticle();
         break;
@@ -68,6 +71,10 @@ function login() {
 
 function logout() {
     echo 'Poziv funkcije logout().';
+}
+
+function registerUser(){
+    
 }
 
 function newArticle() {
