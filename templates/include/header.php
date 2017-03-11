@@ -5,7 +5,9 @@
         <title>
             <?php
             session_start();
-
+            if (!isset($_SESSION[NOTIFICATION_MESSAGES])) {
+                $_SESSION[NOTIFICATION_MESSAGES] = [];
+            }
             error_reporting(E_ALL);
             ini_set('display_errors', 1);
 
@@ -20,13 +22,16 @@
         <!-- -----------------------------------------CSS-----------------------------------------------  -->
         <link rel="stylesheet" href="src/css/style.css">
 
+
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
               crossorigin="anonymous">
 
 
         <!-- ---------------------------------------JavaScript-----------------------------------------  -->
+
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" 
         crossorigin="anonymous"></script>
+
     </head>
     <body>
 
@@ -38,16 +43,22 @@
                     </div>
                     <ul class="nav navbar-nav">
                         <li><a href="index.php">Pocetna</a></li>
-                        <li><a href="index.php?action=articles">Clanci</a></li>
+                        <?php if (isUserIsLoggedIn()) { ?>
+                            <li><a href = "index.php?action=articles">Clanci</a></li>
+                        <?php } ?>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="index.php?action=register"><span class="glyphicon glyphicon-user"></span>Registracija</a></li>
-                        <li><a href="index.php?action=login"><span class="glyphicon glyphicon-log-in"></span> Prijava</a></li>
+                        <?php if (!isUserIsLoggedIn()) { ?>
+                            <li><a href="index.php?action=register"><span class="glyphicon glyphicon-user"></span>Registracija</a></li>
+                        <?php } ?>
+                        
+                        <?php if (!isUserIsLoggedIn() && getCurrentPage() != 'login') { ?>
+                            <li><a href = "index.php?action=login"><span class = "glyphicon glyphicon-log-in"></span> Prijava</a></li>
+                        <?php }else{ ?>
+                            <li><a href = "index.php?action=logout"><span class = "glyphicon glyphicon-log-in"></span> Odjava</a></li>
+                        <?php } ?>
                     </ul>
                 </div>
             </nav>
         </div>
         <div class="container-fluid" id="mainContentDiv">
-
-
-

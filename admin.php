@@ -5,6 +5,8 @@ ini_set('display_errors', 1);
 
 //require
 require 'config-cms-j.php';
+require_once 'src/classes/User.php';
+require 'globalFunctions.php';
 require 'templates/include/header.php';
 
 $action = isset($_GET['action']) ? htmlspecialchars($_GET['action']) : "";
@@ -13,7 +15,7 @@ $action = isset($_GET['action']) ? htmlspecialchars($_GET['action']) : "";
 if (!isAccessAllowed($action)) {
     echo "<h3>Zabranjen pristup admin.php</h3>";
     $_SESSION[FORBIDEN_ACCESS] = FORBIDEN_ACCESS . 'admin.php.';
-    header('Location: index.php');
+    header('Location: index.php?action=login');
 }
 
 
@@ -29,6 +31,9 @@ switch ($action) {
         break;
     case 'register':
         registerUser();
+        break;
+    case 'articles':
+        articles();
         break;
     case 'newArticle':
         newArticle();
@@ -53,14 +58,14 @@ switch ($action) {
 }
 
 function isAccessAllowed($action) {
-    if ($action === 'login' || $action === 'logout') {
-        return true;
-    }
-
-    if (isset($_SESSION['username'])) {
-        return $_SESSION['username'] === 'admin';
-    } else {
+    
+    $user = isset($_SESSION['user'])? $_SESSION['user'] : null;
+    
+    if ($user === null) {
         return false;
+    } else {
+        return isset($_SESSION['isLoggedIn']) &&
+                $_SESSION['isLoggedIn'] == true && $user->fk_id_user_role == 2;
     }
 }
 
@@ -81,7 +86,12 @@ function registerUser() {
 }
 
 function newArticle() {
-    echo 'Poziv funkcije newArticle().';
+
+    if (!isset($_SESSION['newArticleFromForm'])) {
+        require 'admin/article.php?action=new';
+    } else {
+        
+    }
 }
 
 function editArticle() {

@@ -1,5 +1,11 @@
 <?php
 $_SESSION['registrationFromForm'] = true;
+
+if (isset($_SESSION[SESSION_REGISTRATION_PARAMETERS_EMPTY])) {
+    echo '<div class="errorMessageDiv">' . $_SESSION[SESSION_REGISTER_PARAMETERS_EMPTY] . '</div>';
+}
+unset($_SESSION[SESSION_REGISTRATION_PARAMETERS_EMPTY]);
+
 ?>
 <div id="registrationForm">
     <form action="index.php?action=register" method="POST" >

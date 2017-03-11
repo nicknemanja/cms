@@ -5,8 +5,9 @@ require './src/classes/User.php';
 class UserDAO {
 
     private static $SELECT_USER_BY_ID = "SELECT * FROM user WHERE id = :id";
+    private static $SELECT_USER_BY_USERNAME = "SELECT * FROM user WHERE username = :username LIMIT 1";
     private static $SELECT_USER_LIST = "SELECT * FROM user LIMIT 10";
-    private static $INSERT_USER = "INSERT INTO user(username, password, salt, name, fk_id_user_role) VALUES (:username, :password, :name, :fk_id_user_role)";
+    private static $INSERT_USER = "INSERT INTO user(username, password) VALUES (:username, :password)";
     private static $DELETE_USER_BY_ID = "DELETE FROM user WHERE id = :id";
 
     //parameters
@@ -20,11 +21,34 @@ class UserDAO {
         
     }
 
+    public static function getByUsername($username) {
+        try {
+
+            $pdo = new PDO(DB_Connection::$DB_DSN, DB_Connection::$DB_USERNAME, DB_Connection::$DB_PASSWORD);
+            $stmt = $pdo->prepare(UserDAO::$SELECT_USER_BY_USERNAME);
+
+            $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+
+            $stmt->execute();
+
+            return(new User($stmt->fetch()));
+        } catch (PDOException $pdoe) {
+            echo 'Greska pri radu sa bazom podataka.';
+
+            var_dump('PDO_EXCEPTION:', $pdoe);
+            return null;
+        } catch (Exception $e) {
+            echo 'Greska pri radu sa bazom podataka.';
+            var_dump('PDO_EXCEPTION:', $e);
+            return null;
+        }
+    }
+
     public static function getList($size = 10) {
         try {
             $pdo = DB_Connection::getPdo();
             $stmt = $pdo->query(UserDAO::$SELECT_USER_LIST);
-            
+
             $stmt->execute();
 
             $list = array();
@@ -41,7 +65,27 @@ class UserDAO {
     }
 
     public static function insert($user) {
-        
+        try {
+            //INSERT INTO user(username, password) VALUES (:username, :password)";
+
+            $pdo = new PDO(DB_Connection::$DB_DSN, DB_Connection::$DB_USERNAME, DB_Connection::$DB_PASSWORD);
+            $stmt = $pdo->prepare(UserDAO::$INSERT_USER);
+
+            $stmt->bindParam(':username', $user->username, PDO::PARAM_STR);
+            $stmt->bindParam(':password', $user->password, PDO::PARAM_STR);
+
+            return ($stmt->execute());
+        } catch (PDOException $pdoe) {
+            echo 'Greska pri radu sa bazom podataka.';
+            var_dump('PDO_EXCEPTION:', $pdoe);
+            die();
+            return null;
+        } catch (Exception $e) {
+            echo 'Greska pri radu sa bazom podataka.';
+            var_dump('PDO_EXCEPTION:', $e);
+            die();
+            return null;
+        }
     }
 
     public static function update($user) {
