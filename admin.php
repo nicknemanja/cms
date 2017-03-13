@@ -5,7 +5,8 @@ ini_set('display_errors', 1);
 
 //require
 require 'config-cms-j.php';
-require_once 'src/classes/User.php';
+//require_once 'src/classes/User.php';
+require_once 'src/dao/UserDAO.php';
 require 'globalFunctions.php';
 require 'templates/include/header.php';
 
@@ -44,6 +45,9 @@ switch ($action) {
     case 'deleteArticle':
         deleteArticle();
         break;
+    case 'allUsers':
+        showUsers();
+        break;
     case 'newUser':
         newUser();
         break;
@@ -58,9 +62,9 @@ switch ($action) {
 }
 
 function isAccessAllowed($action) {
-    
-    $user = isset($_SESSION['user'])? $_SESSION['user'] : null;
-    
+
+    $user = isset($_SESSION['user']) ? $_SESSION['user'] : null;
+
     if ($user === null) {
         return false;
     } else {
@@ -70,15 +74,7 @@ function isAccessAllowed($action) {
 }
 
 function homepage() {
-    echo 'Poziv funkcije homepage().';
-}
-
-function login() {
-    echo 'Poziv funkcije login() | admin.php.';
-}
-
-function logout() {
-    echo 'Poziv funkcije logout().';
+    require 'articles.php';
 }
 
 function registerUser() {
@@ -102,12 +98,22 @@ function deleteArticle() {
     echo 'Poziv funkcije deleteArticle().';
 }
 
+function showUsers() {
+    require 'admin/allUsers.php';
+}
+
 function newUser() {
     echo 'Poziv funkcije newUser().';
 }
 
 function editUser() {
-    echo 'Poziv funkcije editUser().';
+    if (!empty($_POST)) {
+        $id = $_POST['id'];
+        
+    } else {
+        $_SESSION['editUserWithID'] = $_GET['id'];
+        require 'admin/user.php';
+    }
 }
 
 function deleteUser() {

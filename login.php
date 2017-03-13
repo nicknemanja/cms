@@ -1,10 +1,18 @@
 <?php
+if (isset($_SESSION[NOTIFICATION_MESSAGES][LOGIN_PARAMETERS_EMPTY])) {
+    echo '<div class="errorMessageDiv">' . LOGIN_PARAMETERS_EMPTY . '</div>';
+    unset($_SESSION[NOTIFICATION_MESSAGES][LOGIN_PARAMETERS_EMPTY]);
+}
 
-$_SESSION['loginFromForm'] = true;
+if (isset($_SESSION[NOTIFICATION_MESSAGES][LOGOUT_SUCCESS])) {
+    echo '<div class="errorMessageDiv">' . LOGOUT_SUCCESS . '</div>';
+    unset($_SESSION[NOTIFICATION_MESSAGES][LOGOUT_SUCCESS]);
+}
 
-showNotificationMessages();
-
-
+if (isset($_SESSION[NOTIFICATION_MESSAGES][LOGIN_DATA_NOT_CORRECT])) {
+    echo '<div class="errorMessageDiv">' . LOGIN_DATA_NOT_CORRECT . '</div>';
+    unset($_SESSION[NOTIFICATION_MESSAGES][LOGIN_DATA_NOT_CORRECT]);
+}
 ?>
 <div id="loginForm">
     <form action="index.php?action=login" method="POST" >

@@ -1,14 +1,16 @@
 <?php
 
 require './src/classes/User.php';
+require_once 'src/db/DB_Connection.php';
 
 class UserDAO {
-
-    private static $SELECT_USER_BY_ID = "SELECT * FROM user WHERE id = :id";
+    
     private static $SELECT_USER_BY_USERNAME = "SELECT * FROM user WHERE username = :username LIMIT 1";
+    private static $SELECT_USER_BY_ID = "SELECT * FROM user WHERE id_user = :id LIMIT 1";
     private static $SELECT_USER_LIST = "SELECT * FROM user LIMIT 10";
     private static $INSERT_USER = "INSERT INTO user(username, password) VALUES (:username, :password)";
     private static $DELETE_USER_BY_ID = "DELETE FROM user WHERE id = :id";
+    private static $UPDATE_USER_BY_ID = "UPDATE user SET username = :username, ";
 
     //parameters
     //constructor
@@ -19,6 +21,33 @@ class UserDAO {
     //methods
     public static function getById($id) {
         
+        
+        
+        $pdo = new PDO(DB_Connection::$DB_DSN, DB_Connection::$DB_USERNAME, DB_Connection::$DB_PASSWORD);
+        try{
+            $stmt = $pdo->prepare(UserDAO::$SELECT_USER_BY_ID);
+            
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+            $stmt->execute();
+
+            
+            $user = new User($stmt->fetch());
+       
+            return $user;
+            
+            
+            
+        } catch (PDOException $pdoe) {
+            echo 'Greska pri radu sa bazom podataka.';
+
+            var_dump('PDO_EXCEPTION:', $pdoe);
+            return null;
+        } catch (Exception $e) {
+            echo 'Greska pri radu sa bazom podataka.';
+            var_dump('PDO_EXCEPTION:', $e);
+            return null;
+        }
     }
 
     public static function getByUsername($username) {

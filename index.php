@@ -9,11 +9,13 @@ require 'globalFunctions.php';
 require 'src/dao/UserDAO.php';
 require 'src/dao/ArticleDAO.php';
 
-require 'src/db/DB_Connection.php';
+require_once 'src/db/DB_Connection.php';
 require TEMPLATE_PATH . '/include/header.php';
 
-showNotificationMessages();
-
+if (isset($_SESSION[NOTIFICATION_MESSAGES][SESSION_LOGIN_SUCCESS])) {
+    echo '<div class="errorMessageDiv">' . SESSION_LOGIN_SUCCESS . '</div>';
+    unset($_SESSION[NOTIFICATION_MESSAGES][SESSION_LOGIN_SUCCESS]);
+}
 $action = isset($_GET['action']) ? htmlspecialchars($_GET['action']) : "";
 
 switch ($action) {
@@ -46,85 +48,45 @@ function homepage() {
 }
 
 function login() {
-
-    if (isset($_SESSION['loginFromForm'])) {
-
-        //obraditi login podatke
-        unset($_SESSION['loginFromForm']);
-        $username = isset($_POST['username']) ? ($_POST['username']) : '';
-        $password = isset($_POST['password']) ? ($_POST['password']) : '';
-
-        if ($username == "" || $password == "") {
-            addNotificationMessageToSession(LOGIN_PARAMETERS_EMPTY);
-            echo 'prazni parametri';
-            $_SESSION[CURRENT_PAGE] = 'login';
-            header('Location: index.php?action=login');
-        }
-
-        $hashedPassword = hash('sha512', $password);
-        $user = User::getByUsername($username);
-
-        if ($user->username === $username && strtolower($user->password) === strtolower($hashedPassword)) {
-            //login ok
-            unset($user->password);
-            //seting data to session
-            $_SESSION['isLoggedIn'] = true;
-            $_SESSION['user'] = $user;
-            $_SESSION[NOTIFICATION_MESSAGES][SESSION_LOGIN_SUCCESS] = SESSION_LOGIN_SUCCESS;
-            var_dump('Uspjesan login:', $user);
-            die();
-            if ($user->fk_id_user_role == 2) {
-                header('Location: admin.php');
-            } else {
-                header('Location: index.php');
-            }
+    if (!empty($_POST)) {
+        //submitovani podaci sa forme
+        $username = isset($_POST['username']) ? $_POST['username'] : '';
+        $password = isset($_POST['password']) ? $_POST['password'] : '';
+        if ($username === "" || $password === "") {
+            $_SESSION[NOTIFICATION_MESSAGES][LOGIN_PARAMETERS_EMPTY] = LOGIN_PARAMETERS_EMPTY;
+            header("Location: index.php?action=login");
         } else {
-            //login not ok
-            $_SESSION['isLoggedIn'] = false;
-            $_SESSION[NOTIFICATION_MESSAGES][LOGIN_DATA_NOT_CORRECT] = LOGIN_DATA_NOT_CORRECT;
-            $_SESSION[CURRENT_PAGE] = 'login';
-            header('Location: index.php?action=login');
+            $user = User::getByUsername($username);
+
+            $hashedPassword = hash('sha512', $password);
+
+            if ($user->username === $username && (strtolower($user->password) === strtolower($hashedPassword))) {
+                $_SESSION['isLoggedIn'] = true;
+                $_SESSION['user'] = $user;
+                $_SESSION['username'] = $user->username;
+                $_SESSION[NOTIFICATION_MESSAGES][SESSION_LOGIN_SUCCESS] = SESSION_LOGIN_SUCCESS;
+
+                setUserTypeInSession($user);
+
+                header("Location: index.php");
+            } else {
+                $_SESSION['isLoggedIn'] = false;
+                $_SESSION[NOTIFICATION_MESSAGES][LOGIN_DATA_NOT_CORRECT] = LOGIN_DATA_NOT_CORRECT;
+                header("Location: index.php?action=login");
+            }
         }
     } else {
-        //ukljuciti login formu
+        //ukljuciti formu
         require 'login.php';
     }
 }
 
 function logout() {
-    unset($_SESSION['isLoggedIn']);
+    $_SESSION['isLoggedIn'] = false;
     unset($_SESSION['user']);
-    addNotificationMessageToSession(LOGOUT_SUCCESS);
-    header('Location: index.php');
-}
-
-function register() {
-    if (!(isset($_SESSION['registrationFromForm']))) {
-        require 'register.php';
-    } else {
-        unset($_SESSION['registrationFromForm']);
-
-        $username = isset($_POST['username']) ? htmlspecialchars($_POST['username']) : '';
-        $password = isset($_POST['password']) ? htmlspecialchars($_POST['password']) : '';
-
-        if ($username === "" || $password === "") {
-            $_SESSION[NOTIFICATION_MESSAGES][SESSION_REGISTRATION_PARAMETERS_EMPTY] = SESSION_REGISTRATION_PARAMETERS_EMPTY;
-            $_SESSION[CURRENT_PAGE] = 'homepage';
-            header('Location: index.php?action=register');
-        }
-
-        $hashedPassword = hash('sha512', $password);
-
-        $user = new User(array('username' => $username, 'password' => $hashedPassword));
-
-        if (User::createNew($user) === true) {
-            $_SESSION[NOTIFICATION_MESSAGES][CREATE_USER_SUCCESS] = CREATE_USER_SUCCESS;
-            header('Location: index.php?action=login');
-        } else {
-            $_SESSION[NOTIFICATION_MESSAGES][CREATE_USER_FAIL] = CREATE_USER_FAIL;
-            header('Location: index.php?action=register');
-        }
-    }
+    unset($_SESSION['username']);
+    $_SESSION[NOTIFICATION_MESSAGES][LOGOUT_SUCCESS] = LOGOUT_SUCCESS;
+    header("Location: index.php?action=login");
 }
 
 function showArticles() {
@@ -136,28 +98,19 @@ function viewArticle() {
     //require TEMPLATE_PATH . '/viewArticle='.$_GET['id'];
 }
 
-function showNotificationMessages() {
-
-    $notificationMessages = $_SESSION[NOTIFICATION_MESSAGES];
-
-    foreach ($notificationMessages as $message) {
-        showNotification($message);
-    }
-
-    $_SESSION[NOTIFICATION_MESSAGES] = [];
-}
-
 function showNotification($notification) {
     echo '<div class="errorMessageDiv">' . $notification . '</div>';
 }
 
-function addNotificationMessageToSession($message) {
-    if (!isset($_SESSION[NOTIFICATION_MESSAGES])) {
-        $_SESSION[NOTIFICATION_MESSAGES] = [];
-    }
-    array_push($_SESSION[NOTIFICATION_MESSAGES], $message);
-}
-
 function newLine() {
     echo "<br>";
+}
+
+function setUserTypeInSession($user) {
+
+    if ($user->fk_id_user_role == 1) {
+        $_SESSION['userType'] = 'korisnik';
+    } else if ($user->fk_id_user_role == 2) {
+        $_SESSION['userType'] = 'admin';
+    }
 }

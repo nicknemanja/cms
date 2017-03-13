@@ -42,7 +42,12 @@
                         <a href="index.php" class="navbar-left"><img src="img/logo.jpg"></a>
                     </div>
                     <ul class="nav navbar-nav">
-                        <li><a href="index.php">Pocetna</a></li>
+                        <?php if (getUserType() == "korisnik") { ?>
+                            <li><a href="index.php">Pocetna</a></li>
+                        <?php } else if (isUserIsLoggedIn() && getUserType() == "admin") { ?>
+                            <li><a href="admin.php">Admin</a></li>
+                            <li><a href = "admin.php?action=allUsers">Korisnici</a></li>
+                        <?php } ?>
                         <?php if (isUserIsLoggedIn()) { ?>
                             <li><a href = "index.php?action=articles">Clanci</a></li>
                         <?php } ?>
@@ -51,10 +56,10 @@
                         <?php if (!isUserIsLoggedIn()) { ?>
                             <li><a href="index.php?action=register"><span class="glyphicon glyphicon-user"></span>Registracija</a></li>
                         <?php } ?>
-                        
+
                         <?php if (!isUserIsLoggedIn() && getCurrentPage() != 'login') { ?>
                             <li><a href = "index.php?action=login"><span class = "glyphicon glyphicon-log-in"></span> Prijava</a></li>
-                        <?php }else{ ?>
+                        <?php } else { ?>
                             <li><a href = "index.php?action=logout"><span class = "glyphicon glyphicon-log-in"></span> Odjava</a></li>
                         <?php } ?>
                     </ul>
